@@ -97,7 +97,7 @@ class FixtureData : public Ref
     float radius;
 
     // for polygons / polyline
-    Vector<Polygon *> polygons;
+    Vector<class Polygon*> polygons;
 };
 
 
