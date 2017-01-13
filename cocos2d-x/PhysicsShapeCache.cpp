@@ -182,7 +182,8 @@ PhysicsBody *PhysicsShapeCache::createBodyWithName(const std::string &name)
     BodyDef *bd = getBodyDef(name);
     if (!bd)
     {
-        return 0; // body not found
+        CCLOG("WARNING: PhysicsBody with name \"%s\", not found!", name.c_str());
+        return nullptr;
     }
     PhysicsBody *body = PhysicsBody::create();
     setBodyProperties(body, bd);
