@@ -110,7 +110,7 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleF
                 const ValueVector &polygonsArray = fixturedata.at("polygons").asValueVector();
                 for (auto &polygonitem : polygonsArray)
                 {
-                    Polygon *poly = new Polygon();
+                    class Polygon *poly = new class Polygon();
                     fd->polygons.pushBack(poly);
                     auto &polygonArray = polygonitem.asValueVector();
                     poly->numVertices = (int)polygonArray.size();
@@ -182,7 +182,8 @@ PhysicsBody *PhysicsShapeCache::createBodyWithName(const std::string &name)
     BodyDef *bd = getBodyDef(name);
     if (!bd)
     {
-        return 0; // body not found
+        CCLOG("WARNING: PhysicsBody with name \"%s\", not found!", name.c_str());
+        return nullptr;
     }
     PhysicsBody *body = PhysicsBody::create();
     setBodyProperties(body, bd);
