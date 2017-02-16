@@ -63,7 +63,7 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleF
         // plist file not found
         return false;
     }
-
+    
     ValueMap &metadata = dict["metadata"].asValueMap();
     int format = metadata["format"].asInt();
     if (format != 1)
@@ -71,7 +71,7 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleF
         CCASSERT(format == 1, "format not supported!");
         return false;
     }
-
+    
     ValueMap &bodydict = dict.at("bodies").asValueMap();
     for (auto iter = bodydict.cbegin(); iter != bodydict.cend(); ++iter)
     {
@@ -87,7 +87,7 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleF
         bodyDef->angularDamping       = bodyData.at("angular_damping").asFloat();
         bodyDef->velocityLimit        = bodyData.at("velocity_limit").asFloat();
         bodyDef->angularVelocityLimit = bodyData.at("angular_velocity_limit").asFloat();
-
+        
         const ValueVector &fixtureList = bodyData.at("fixtures").asValueVector();
         for (auto &fixtureitem : fixtureList)
         {
@@ -102,7 +102,7 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleF
             fd->categoryMask    = fixturedata.at("category_mask").asInt();
             fd->collisionMask   = fixturedata.at("collision_mask").asInt();
             fd->contactTestMask = fixturedata.at("contact_test_mask").asInt();
-
+            
             std::string fixtureType = fixturedata.at("fixture_type").asString();
             if (fixtureType == "POLYGON")
             {
@@ -137,14 +137,14 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleF
                 // unknown type
                 return false;
             }
-
+            
         }
     }
     return true;
 }
 
 
-BodyDef *PhysicsShapeCache::getBodyDef(const std::string &name)
+PhysicsShapeCache::BodyDef *PhysicsShapeCache::getBodyDef(const std::string &name)
 {
     BodyDef *bd = bodyDefs.at(name);
     if (!bd)
@@ -182,11 +182,12 @@ PhysicsBody *PhysicsShapeCache::createBodyWithName(const std::string &name)
     BodyDef *bd = getBodyDef(name);
     if (!bd)
     {
-        return 0; // body not found
+        CCLOG("WARNING: PhysicsBody with name \"%s\", not found!", name.c_str());
+        return nullptr; // body not found
     }
     PhysicsBody *body = PhysicsBody::create();
     setBodyProperties(body, bd);
-
+    
     for (auto fd : bd->fixtures)
     {
         PhysicsMaterial material(fd->density, fd->restitution, fd->friction);
@@ -219,7 +220,7 @@ bool PhysicsShapeCache::setBodyOnSprite(const std::string &name, Sprite *sprite)
         // Cocos2d-x 3.7 required for custom anchor points:
         sprite->setAnchorPoint(getBodyDef(name)->anchorPoint);
     }
-    return body != 0;
+    return body != nullptr;
 }
 
 
@@ -231,7 +232,7 @@ bool PhysicsShapeCache::removeShapesWithFile(const std::string &plist)
         // plist file not found
         return false;
     }
-
+    
     ValueMap &metadata = dict["metadata"].asValueMap();
     int format = metadata["format"].asInt();
     if (format != 1)
@@ -239,7 +240,7 @@ bool PhysicsShapeCache::removeShapesWithFile(const std::string &plist)
         CCASSERT(format == 1, "format not supported!");
         return false;
     }
-
+    
     ValueMap &bodydict = dict.at("bodies").asValueMap();
     for (auto iter = bodydict.cbegin(); iter != bodydict.cend(); ++iter)
     {
@@ -250,7 +251,7 @@ bool PhysicsShapeCache::removeShapesWithFile(const std::string &plist)
             safeDeleteBodyDef(bd);
             bodyDefs.erase(bodyName);
         }
-
+        
     }
     return true;
 }
