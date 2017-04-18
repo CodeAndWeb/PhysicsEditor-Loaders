@@ -1,5 +1,6 @@
 package com.codeandweb.physicseditor;
 
+import com.badlogic.gdx.utils.SerializationException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +12,7 @@ public class ShapeCacheTest {
 
   @Before
   public void beforeEach() throws Exception {
-    shapeCache = Fixtures.load("bugs");
+    shapeCache = Fixtures.load("bugs.xml");
   }
 
   @After
@@ -32,12 +33,12 @@ public class ShapeCacheTest {
     assertTrue(shapeCache.contains("bug_0004"));
   }
 
-  @Test
+  @Test(expected = SerializationException.class)
   public void testMissingFile() throws Exception {
     Fixtures.load("missing");
   }
 
-  @Test
+  @Test(expected = SerializationException.class)
   public void testBrokenFile() throws Exception {
     Fixtures.load("bugs.pes");
   }

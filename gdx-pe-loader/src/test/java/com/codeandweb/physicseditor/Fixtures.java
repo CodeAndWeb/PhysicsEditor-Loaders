@@ -18,7 +18,7 @@ public final class Fixtures {
   static ShapeCache load(String fixtureName) {
     initBox2D();
 
-    String filename = String.format("src/test/resources/%s.xml", fixtureName);
+    String filename = String.format("src/test/resources/%s", fixtureName);
 
     File xmlFile = new File(filename);
 

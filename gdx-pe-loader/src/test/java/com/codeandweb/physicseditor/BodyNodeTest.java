@@ -39,7 +39,7 @@ public class BodyNodeTest {
 
   @Test
   public void testCreateBody() throws Exception {
-    ShapeCache shapeCache = Fixtures.load("bugs");
+    ShapeCache shapeCache = Fixtures.load("bugs.xml");
 
     Body body = shapeCache.createBody("bug_0001", world, bodyDef, 1, 1);
     Array<Fixture> fixtures = body.getFixtureList();
@@ -56,7 +56,7 @@ public class BodyNodeTest {
    */
   @Test
   public void testCreateAllBodies() throws Exception {
-    ShapeCache shapeCache = Fixtures.load("bugs");
+    ShapeCache shapeCache = Fixtures.load("bugs.xml");
 
     shapeCache.createBody("bug_0001", world, bodyDef, 1, 1);
     shapeCache.createBody("bug_0002", world, bodyDef, 1, 1);

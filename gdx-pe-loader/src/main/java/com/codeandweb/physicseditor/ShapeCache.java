@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.SerializationException;
 import com.badlogic.gdx.utils.XmlReader;
 import java.io.IOException;
 
@@ -18,8 +19,9 @@ public class ShapeCache {
    * containing the body + fixture definitions.
    *
    * @param file Handle of the XML file
+   * @throws SerializationException if XML data file cannot be loaded or parsed
    */
-  public ShapeCache(FileHandle file) {
+  public ShapeCache(FileHandle file) throws SerializationException {
     try {
       XmlReader reader = new XmlReader();
       XmlReader.Element rootNode = reader.parse(file);
@@ -27,7 +29,7 @@ public class ShapeCache {
       bodyDefNode = new BodyDefNode(rootNode);
     } catch (IOException e) {
       e.printStackTrace();
-      throw new RuntimeException("failed to load XML");
+      throw new SerializationException("failed to load physics shapes XML");
     }
   }
 
@@ -37,7 +39,7 @@ public class ShapeCache {
    *
    * @param internalPath Internal file path of the XML file
    */
-  public ShapeCache(String internalPath) {
+  public ShapeCache(String internalPath) throws SerializationException {
     this(Gdx.files.internal(internalPath));
   }
 

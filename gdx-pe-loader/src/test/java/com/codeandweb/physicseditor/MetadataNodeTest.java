@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 public class MetadataNodeTest {
   @Test
   public void testLoadsMetadata() {
-    ShapeCache shapeCache = Fixtures.load("bugs");
+    ShapeCache shapeCache = Fixtures.load("bugs.xml");
 
     assertEquals(32, shapeCache.getPTM(), 1);
   }
