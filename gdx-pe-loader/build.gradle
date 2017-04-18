@@ -1,0 +1,98 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+ext {
+    gdxVersion = '1.9.6'
+}
+
+signing {
+    sign configurations.archives
+}
+
+
+group = "com.codeandweb.physicseditor"
+version = "1.1.0-SNAPSHOT"
+archivesBaseName = "gdx-pe-loader"
+
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'gdx-pe-loader'
+        packaging 'jar'
+        // optionally artifactId can be defined here
+        description 'LibGDX PhysicsEditor XML loader'
+        url 'https://www.codeandweb.com/physicseditor'
+
+        scm {
+          connection 'scm:git:https://github.com/CodeAndWeb/PhysicsEditor-Loaders.git'
+          developerConnection 'scm:git:https://github.com/CodeAndWeb/PhysicsEditor-Loaders.git'
+          url 'https://github.com/CodeAndWeb/PhysicsEditor-Loaders'
+        }
+
+        licenses {
+          license {
+            name 'MIT'
+            url 'https://opensource.org/licenses/mit-license.php'
+          }
+        }
+
+        developers {
+          developer {
+            id 'codeandweb.com'
+            name 'Andreas Loew'
+            email 'dev@codeandweb.com'
+          }
+        }
+      }
+    }
+  }
+}
+
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+
+    compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+}
