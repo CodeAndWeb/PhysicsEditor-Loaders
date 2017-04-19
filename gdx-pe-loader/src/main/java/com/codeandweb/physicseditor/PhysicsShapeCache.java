@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.XmlReader;
 import java.io.IOException;
 
 
-public class ShapeCache {
+public class PhysicsShapeCache {
 
   private BodyDefNode bodyDefNode;
 
@@ -21,7 +21,7 @@ public class ShapeCache {
    * @param file Handle of the XML file
    * @throws SerializationException if XML data file cannot be loaded or parsed
    */
-  public ShapeCache(FileHandle file) throws SerializationException {
+  public PhysicsShapeCache(FileHandle file) throws SerializationException {
     try {
       XmlReader reader = new XmlReader();
       XmlReader.Element rootNode = reader.parse(file);
@@ -39,7 +39,7 @@ public class ShapeCache {
    *
    * @param internalPath Internal file path of the XML file
    */
-  public ShapeCache(String internalPath) throws SerializationException {
+  public PhysicsShapeCache(String internalPath) throws SerializationException {
     this(Gdx.files.internal(internalPath));
   }
 

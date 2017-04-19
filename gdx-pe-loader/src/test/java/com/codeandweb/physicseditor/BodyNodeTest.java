@@ -39,7 +39,7 @@ public class BodyNodeTest {
 
   @Test
   public void testCreateBody() throws Exception {
-    ShapeCache shapeCache = Fixtures.load("bugs.xml");
+    PhysicsShapeCache shapeCache = Fixtures.load("bugs.xml");
 
     Body body = shapeCache.createBody("bug_0001", world, bodyDef, 1, 1);
     Array<Fixture> fixtures = body.getFixtureList();
@@ -50,13 +50,13 @@ public class BodyNodeTest {
 
   /**
    * This test just makes sure that all of the bodies can be created through
-   * {@link ShapeCache} without raising any exceptions.
+   * {@link PhysicsShapeCache} without raising any exceptions.
    *
    * @throws Exception
    */
   @Test
   public void testCreateAllBodies() throws Exception {
-    ShapeCache shapeCache = Fixtures.load("bugs.xml");
+    PhysicsShapeCache shapeCache = Fixtures.load("bugs.xml");
 
     shapeCache.createBody("bug_0001", world, bodyDef, 1, 1);
     shapeCache.createBody("bug_0002", world, bodyDef, 1, 1);

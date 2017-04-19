@@ -13,7 +13,7 @@ Or you can add the following dependency to you core project of your ```build.gra
 
 	project(":core") {
 		dependencies {
-			compile "com.codeandweb.physicseditor:box2d-pexml:1.1.0"
+			compile "com.codeandweb.physicseditor:gdx-pe-loader:1.1.0"
 		}
 	}
 

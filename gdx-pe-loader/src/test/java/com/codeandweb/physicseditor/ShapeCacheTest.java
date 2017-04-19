@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ShapeCacheTest {
-  private ShapeCache shapeCache;
+  private PhysicsShapeCache shapeCache;
 
   @Before
   public void beforeEach() throws Exception {
