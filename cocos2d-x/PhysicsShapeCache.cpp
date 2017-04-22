@@ -58,14 +58,14 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist)
 bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleFactor)
 {
     CCASSERT(bodiesInFile.find(plist) == bodiesInFile.end(), "file already loaded");
-    
+
     ValueMap dict = FileUtils::getInstance()->getValueMapFromFile(plist);
     if (dict.empty())
     {
         // plist file not found
         return false;
     }
-    
+
     ValueMap &metadata = dict["metadata"].asValueMap();
     int format = metadata["format"].asInt();
     if (format != 1)
@@ -73,19 +73,19 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleF
         CCASSERT(format == 1, "format not supported!");
         return false;
     }
-    
+
     ValueMap &bodydict = dict.at("bodies").asValueMap();
-    
+
     std::vector<BodyDef*> bodies(bodydict.size());
     int num=0;
-    
+
     for (auto iter = bodydict.cbegin(); iter != bodydict.cend(); ++iter)
     {
         const ValueMap &bodyData = iter->second.asValueMap();
         std::string bodyName = iter->first;
         BodyDef *bodyDef = new BodyDef();
         bodies[num++] = bodyDef;
-        bodyDefs.insert(bodyName, bodyDef);
+        bodyDefs.insert(std::make_pair(bodyName, bodyDef));
         bodyDef->anchorPoint          = PointFromString(bodyData.at("anchorpoint").asString());
         bodyDef->isDynamic            = bodyData.at("is_dynamic").asBool();
         bodyDef->affectedByGravity    = bodyData.at("affected_by_gravity").asBool();
@@ -94,12 +94,12 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleF
         bodyDef->angularDamping       = bodyData.at("angular_damping").asFloat();
         bodyDef->velocityLimit        = bodyData.at("velocity_limit").asFloat();
         bodyDef->angularVelocityLimit = bodyData.at("angular_velocity_limit").asFloat();
-        
+
         const ValueVector &fixtureList = bodyData.at("fixtures").asValueVector();
         for (auto &fixtureitem : fixtureList)
         {
             FixtureData *fd = new FixtureData();
-            bodyDef->fixtures.pushBack(fd);
+            bodyDef->fixtures.push_back(fd);
             auto &fixturedata = fixtureitem.asValueMap();
             fd->density         = fixturedata.at("density").asFloat();
             fd->restitution     = fixturedata.at("restitution").asFloat();
@@ -109,7 +109,7 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleF
             fd->categoryMask    = fixturedata.at("category_mask").asInt();
             fd->collisionMask   = fixturedata.at("collision_mask").asInt();
             fd->contactTestMask = fixturedata.at("contact_test_mask").asInt();
-            
+
             std::string fixtureType = fixturedata.at("fixture_type").asString();
             if (fixtureType == "POLYGON")
             {
@@ -118,7 +118,7 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleF
                 for (auto &polygonitem : polygonsArray)
                 {
                     Polygon *poly = new Polygon();
-                    fd->polygons.pushBack(poly);
+                    fd->polygons.push_back(poly);
                     auto &polygonArray = polygonitem.asValueVector();
                     poly->numVertices = (int)polygonArray.size();
                     auto *vertices = poly->vertices = new cocos2d::Point[poly->numVertices];
@@ -144,12 +144,12 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleF
                 // unknown type
                 return false;
             }
-            
+
         }
     }
-    
+
     bodiesInFile[plist] = bodies;
-    
+
     return true;
 }
 
@@ -197,7 +197,7 @@ PhysicsBody *PhysicsShapeCache::createBodyWithName(const std::string &name)
     }
     PhysicsBody *body = PhysicsBody::create();
     setBodyProperties(body, bd);
-    
+
     for (auto fd : bd->fixtures)
     {
         PhysicsMaterial material(fd->density, fd->restitution, fd->friction);
@@ -236,14 +236,14 @@ bool PhysicsShapeCache::setBodyOnSprite(const std::string &name, Sprite *sprite)
 void PhysicsShapeCache::removeShapesWithFile(const std::string &plist)
 {
     auto bodies = bodiesInFile.at(plist);
-    
+
     for (auto iter = bodies.begin(); iter != bodies.end(); ++iter)
     {
         safeDeleteBodyDef(*iter);
     }
-    
+
     bodiesInFile.erase(plist);
-    
+
     return;
 }
 
@@ -261,13 +261,16 @@ void PhysicsShapeCache::removeAllShapes()
 
 void PhysicsShapeCache::safeDeleteBodyDef(BodyDef *bodyDef)
 {
-    for (auto fixturedate : bodyDef->fixtures)
+    for (auto fixturedata : bodyDef->fixtures)
     {
-        for (auto polygon : fixturedate->polygons)
+        for (auto polygon : fixturedata->polygons)
         {
             CC_SAFE_DELETE_ARRAY(polygon->vertices);
+            CC_SAFE_DELETE(polygon);
         }
-        fixturedate->polygons.clear();
+        fixturedata->polygons.clear();
+        CC_SAFE_DELETE(fixturedata);
     }
     bodyDef->fixtures.clear();
+    CC_SAFE_DELETE(bodyDef);
 }
