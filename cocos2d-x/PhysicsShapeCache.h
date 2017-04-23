@@ -108,7 +108,7 @@ private:
     } FixtureType;
 
 
-    class Polygon : public Ref
+    class Polygon
     {
     public:
         Point* vertices;
@@ -116,7 +116,7 @@ private:
     };
 
 
-    class FixtureData : public Ref
+    class FixtureData
     {
     public:
         FixtureType fixtureType;
@@ -140,7 +140,7 @@ private:
     };
 
 
-    class BodyDef : public Ref
+    class BodyDef
     {
     public:
         Point anchorPoint;
