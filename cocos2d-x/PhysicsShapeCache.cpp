@@ -156,12 +156,23 @@ bool PhysicsShapeCache::addShapesWithFile(const std::string &plist, float scaleF
 
 PhysicsShapeCache::BodyDef *PhysicsShapeCache::getBodyDef(const std::string &name)
 {
-    BodyDef *bd = bodyDefs.at(name);
-    if (!bd)
+    try
     {
-        bd = bodyDefs.at(name.substr(0, name.rfind('.'))); // remove file suffix and try again...
+        return bodyDefs.at(name);
     }
-    return bd;
+    catch(std::out_of_range&)
+    {
+    }
+
+    try
+    {
+        return bodyDefs.at(name.substr(0, name.rfind('.'))); // remove file suffix and try again...
+    }
+    catch(std::out_of_range&)
+    {
+    }
+    
+    return nullptr;
 }
 
 
