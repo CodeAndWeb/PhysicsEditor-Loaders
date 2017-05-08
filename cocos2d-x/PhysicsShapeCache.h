@@ -163,8 +163,8 @@ private:
     void setBodyProperties(PhysicsBody *body, BodyDef *bd);
     void setShapeProperties(PhysicsShape *shape, FixtureData *fd);
 
-    std::map<std::string, BodyDef *> bodyDefs;
-    std::map<std::string, std::vector<BodyDef *>> bodiesInFile;
+    std::unordered_map<std::string, BodyDef *> bodyDefs;
+    std::unordered_map<std::string, std::vector<BodyDef *>> bodiesInFile;
 };
 
 
