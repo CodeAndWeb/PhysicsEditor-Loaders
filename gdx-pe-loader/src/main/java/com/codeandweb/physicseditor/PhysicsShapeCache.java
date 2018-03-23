@@ -27,9 +27,9 @@ public class PhysicsShapeCache {
       XmlReader.Element rootNode = reader.parse(file);
 
       bodyDefNode = new BodyDefNode(rootNode);
-    } catch (IOException e) {
+    } catch (SerializationException e) {
       e.printStackTrace();
-      throw new SerializationException("failed to load physics shapes XML");
+      throw new SerializationException("failed to load physics shapes XML", e);
     }
   }
 
