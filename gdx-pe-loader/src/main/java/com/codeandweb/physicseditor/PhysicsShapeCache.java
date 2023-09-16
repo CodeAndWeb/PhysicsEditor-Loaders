@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.XmlReader;
 import java.io.IOException;
 
 
-public class PhysicsShapeCache {
+public class PhysicsShapeCache implements Disposable {
 
   private BodyDefNode bodyDefNode;
 
